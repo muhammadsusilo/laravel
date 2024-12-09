@@ -1,0 +1,39 @@
+<li class="nav-item mx-2 py-2 {{ Request::is('contohorder') ? 'warna' : 'warni' }}">
+                <x-nav-link href="/contohorder">
+                    <svg width="30" height="30" viewBox="0 0 25 25" fill="var(--warna)"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect x="5.83203" y="4.5" width="14" height="17" rx="2" stroke="#98A2B3" />
+                        <path d="M9.83203 9.5H15.832" stroke="#98A2B3" stroke-linecap="round" />
+                        <path d="M9.83203 13.5H15.832" stroke="#98A2B3" stroke-linecap="round" />
+                        <path d="M9.83203 17.5H13.832" stroke="#98A2B3" stroke-linecap="round" />
+                    </svg>
+                </x-nav-link>
+                <span>Order</span>
+            </li>
+            <li class="nav-item mx-2 py-2 {{ Request::is('contohnotifikasi') ? 'warna' : 'warni' }}">
+                <x-nav-link href="/contohnotifikasi" :active="request()->is('/contohnotifikasi')">
+                    <svg width="30" height="30" viewBox="0 0 25 25" fill="var(--warna)"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6.61581 9.46942C6.93016 6.64032 9.32146 4.5 12.168 4.5V4.5C15.0145 4.5 17.4058 6.64032 17.7201 9.46942L17.9719 11.7356C17.9751 11.7645 17.9767 11.779 17.9784 11.7933C18.1073 12.9169 18.4731 14.0005 19.0515 14.9725C19.0589 14.9849 19.0664 14.9973 19.0813 15.0222L19.6593 15.9856C20.1839 16.8599 20.4462 17.297 20.3896 17.6559C20.3519 17.8946 20.229 18.1117 20.0436 18.2668C19.7651 18.5 19.2553 18.5 18.2357 18.5H6.1002C5.08065 18.5 4.57088 18.5 4.29231 18.2668C4.10694 18.1117 3.98405 17.8946 3.94638 17.6559C3.88976 17.297 4.15204 16.8599 4.67659 15.9856L5.25462 15.0222C5.26958 14.9973 5.27706 14.9849 5.28441 14.9725C5.86285 14.0005 6.22861 12.9169 6.35755 11.7933C6.35919 11.779 6.3608 11.7645 6.36401 11.7356L6.61581 9.46942Z"
+                            stroke="#98A2B3" />
+                        <path
+                            d="M9.27019 18.9059C9.44112 19.6501 9.81775 20.3077 10.3417 20.7767C10.8656 21.2458 11.5076 21.5 12.168 21.5C12.8284 21.5 13.4703 21.2458 13.9943 20.7767C14.5182 20.3077 14.8948 19.6501 15.0657 18.9059"
+                            stroke="#98A2B3" stroke-linecap="round" />
+                    </svg>
+
+                </x-nav-link>
+                <span>Notifikasi</span>
+            </li>
+            <li class="nav-item mx-2 py-2 {{ Request::is('contohprofile') ? 'warna' : 'warni' }}">
+                <x-nav-link href="/contohprofile" :active="request()->is('/contohprofile')">
+                    <svg width="30" height="30" viewBox="0 0 25 25" fill="var(--warna)"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12.5" cy="8.5" r="3.5" stroke="#98A2B3" stroke-linecap="round" />
+                        <path
+                            d="M5.34913 17.4479C5.98883 15.1034 8.41473 14 10.845 14H14.155C16.5853 14 19.0112 15.1034 19.6509 17.4479C19.782 17.9287 19.8868 18.4489 19.9462 19.0015C20.0052 19.5507 19.5523 20 19 20H6C5.44772 20 4.99482 19.5507 5.05382 19.0015C5.1132 18.4489 5.21796 17.9287 5.34913 17.4479Z"
+                            stroke="#98A2B3" stroke-linecap="round" />
+                    </svg>
+                </x-nav-link>
+                <span>Profile</span>
+            </li>

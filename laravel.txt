@@ -1,0 +1,3 @@
+php artisam make:component Namafile = untuk menambah komponen 
+
+{{ $slot }}	=  untuk mengganti nama jika di ada value di dalam vaiable

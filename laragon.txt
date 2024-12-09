@@ -1,0 +1,7 @@
+cara web bisa ke internet
+
+1. alamat directory
+2. php artisan serve = ke web
+	php -S localhost:8000 -t public/ = sama ke web
+3. php artisan key:generate = untuk mengecek kondisi error
+4. php artisan migrate:fresh --sed

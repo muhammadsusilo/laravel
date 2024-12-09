@@ -1,0 +1,284 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // cek list syarat dan ketentuan
+    const checkbox = document.getElementById("checked");
+    const label = document.querySelector('label[for="checked"]');
+
+    checkbox.addEventListener("click", function () {
+        if (checkbox.checked) {
+            label.classList.remove("colorcheck");
+        } else {
+            label.classList.add("colorcheck");
+        }
+    });
+
+    // untuk menambah dan mengurangi
+    let count = 0;
+
+    const minus = document.getElementById("minus");
+    const plus = document.getElementById("plus");
+    const countLabel = document.getElementById("countlabel");
+
+    minus.addEventListener("click", function () {
+        if (count > 0) {
+            count--;
+            countLabel.innerText = count;
+         validateForm();   
+        }
+    });
+    plus.addEventListener("click", function () {
+        count++;
+        countLabel.innerText = count;
+        validateForm();
+    });
+
+    // kalender
+    const dateRangeInput = document.getElementById("date-range");
+    const calendarContainer = document.getElementById("calendar-container");
+    const calendar = document.getElementById("calendar");
+    const cancelButton = document.getElementById("cancel-button");
+    const applyButton = document.getElementById("apply-button");
+    const prevButton = document.getElementById("prev-button");
+    const nextButton = document.getElementById("next-button");
+    const header = document.getElementById("current-month-year");
+    const iconKalender = document.getElementById("iconkalender");
+
+    let startDate = null;
+    let endDate = null;
+    let currentMonth = 5; // Juni (bulan dimulai dari 0)  bisa berubah sendiri
+    let currentYear = 2024; // bisa berubah sendiri
+
+    // clik tombol icon kalender dan input
+    dateRangeInput.addEventListener("click", toggleCalender);
+    iconKalender.addEventListener("click", toggleCalender);
+
+    cancelButton.addEventListener("click", function () {
+        calendarContainer.classList.add("hidden");
+    });
+
+    applyButton.addEventListener("click", function () {
+        if (startDate && endDate) {
+            dateRangeInput.value = `${formatDate(startDate)} / ${formatDate(endDate)}`;
+        } else {
+            dateRangeInput.value = "";
+        }
+        calendarContainer.classList.add("hidden");
+    });
+
+    prevButton.addEventListener("click", function () {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        renderCalendar();
+    });
+
+    nextButton.addEventListener("click", function () {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        renderCalendar();
+    });
+
+    function toggleCalender() {
+        calendarContainer.classList.toggle("hidden");
+        if (!calendarContainer.classList.contains("hidden")) {
+            renderCalendar();
+        }
+    }
+
+    function renderCalendar() {
+        calendar.innerHTML = "";
+        updateHeader();
+        const today = new Date();
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(
+            currentYear,
+            currentMonth + 1,
+            0,
+        ).getDate();
+
+        // Menambahkan tanggal dari bulan sebelumnya
+        const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+        for (let i = firstDay - 1; i >= 0; i--) {
+            const dayElement = document.createElement("div");
+            dayElement.textContent = prevMonthDays - i;
+            dayElement.classList.add("other-month");
+            calendar.appendChild(dayElement);
+        }
+
+        // Menambahkan tanggal bulan ini
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayElement = document.createElement("div");
+            dayElement.textContent = i;
+            dayElement.addEventListener("click", function () {
+                selectDate(i);
+            });
+
+            const date = new Date(currentYear, currentMonth, i);
+
+            // if (isToday(date, today)) {
+            //     dayElement.classList.add("today");
+            // } else
+            if (isSelectedDate(date)) {
+                dayElement.classList.add("selected");
+            } else if (isInRange(date)) {
+                dayElement.classList.add("in-range");
+            }
+
+            calendar.appendChild(dayElement);
+        }
+
+        // Menambahkan tanggal dari bulan sesudahnya
+        const totalCells = firstDay + daysInMonth;
+        const nextMonthDays = 42 - totalCells; // total 6 minggu (7 hari * 6 baris)
+        for (let i = 1; i <= nextMonthDays; i++) {
+            const dayElement = document.createElement("div");
+            dayElement.textContent = i;
+            dayElement.classList.add("other-month");
+            calendar.appendChild(dayElement);
+        }
+    }
+
+    function updateHeader() {
+        const monthNames = [
+            "Januari",
+            "Februari",
+            "Maret",
+            "April",
+            "Mei",
+            "Juni",
+            "Juli",
+            "Agustus",
+            "September",
+            "Oktober",
+            "November",
+            "Desember",
+        ];
+        header.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    }
+
+    // function selectDate(day) {
+    //     if (!startDate || (startDate && endDate)) {
+    //         startDate = new Date(currentYear, currentMonth, day);
+    //         endDate = null;
+    //     } else if (!endDate) {
+    //         endDate = new Date(currentYear, currentMonth, day);
+    //         if (startDate > endDate) {
+    //             [startDate, endDate] = [endDate, startDate];
+    //         }
+    //     }
+    //     renderCalendar();
+    // }
+
+    function selectDate(day) {
+        const date = new Date(currentYear, currentMonth, day);
+        if (!startDate || (startDate && endDate)) {
+            startDate = date;
+            endDate = null;
+        } else if (date < startDate) {
+            endDate = startDate;
+            startDate = date;
+        } else {
+            endDate = date;
+        }
+        renderCalendar();
+    }
+
+    // function isSelectedDate(day) {
+    //     const date = new Date(currentYear, currentMonth, day);
+    //     if (startDate && endDate) {
+    //         return date >= startDate && date <= endDate;
+    //     } else if (startDate) {
+    //         return date.getTime() === startDate.getTime();
+    //     }
+    //     return false;
+    // }
+
+    function isSelectedDate(date) {
+        return (
+            date.toDateString() ===
+                (startDate ? startDate.toDateString() : "") ||
+            date.toDateString() === (endDate ? endDate.toDateString() : "")
+        );
+    }
+
+    function isInRange(date) {
+        if (!startDate || !endDate) return false;
+        return date >= startDate && date <= endDate;
+    }
+
+    // function isToday(day) {
+    //     const today = new Date();
+    //     const date = new Date(currentYear, currentMonth, day);
+    //     return today.toDateString() === date.toDateString();
+    // }
+
+    // function isToday(date, today) {
+    //     return date.toDateString() === today.toDateString();
+    // }
+
+    function formatDate(date) {
+        if (!date) return "";
+        const day = date.getDate().toString().padStart(2, "0");
+        const monthNames = [
+            "Januari",
+            "Febuari",
+            "Maret",
+            "April",
+            "Mei",
+            "Juni",
+            "Juli",
+            "Agustus",
+            "September",
+            "Oktober",
+            "November",
+            "Desember",
+        ];
+        const month = monthNames[date.getMonth()];
+        return `${day} ${month}`;
+    }
+
+    const name = document.getElementById("name");
+    const kategori = document.getElementById("kategori");
+    const keterangan = document.getElementById("keterangan");
+    const checked = document.getElementById("checked");
+    const submit = document.getElementById("submit-button");
+
+    function validateForm() {
+        const isNameFilled = name.value.trim() !== " ";
+        const isKategoriSelected = kategori.value !== " ";
+        const isJumlahLabel = parseInt(countLabel.textContent) > 0;
+        const isKeteranganFilled = keterangan.value.trim() !== " ";
+        const isDateRangeSelected = dateRangeInput.value.trim() !== " ";
+        const isChecked = checked.checked ;
+        const isCalenderSelected = startDate !== null && endDate !== null; 
+
+        if (
+            isNameFilled &&
+            isKategoriSelected &&
+            isJumlahLabel &&
+            isKeteranganFilled &&
+            isDateRangeSelected && 
+            isChecked &&
+            isCalenderSelected
+        ) {
+            submit.classList.add("enabled");
+            submit.removeAttribute('disabled')
+        } else {
+            submit.classList.remove("enabled");
+            submit.setAttribute("disabled","disabled")
+        }
+    }
+
+    name.addEventListener("input", validateForm);
+    kategori.addEventListener("change", validateForm);
+    keterangan.addEventListener("input", validateForm);
+
+    renderCalendar();
+    validateForm();
+});
